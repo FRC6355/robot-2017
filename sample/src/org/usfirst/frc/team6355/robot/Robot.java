@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6355.robot;
 
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * instead if you're new.
  */
 public class Robot extends SampleRobot {
-	RobotDrive myRobot = new RobotDrive(0, 1);
+	RobotDrive myRobot = new RobotDrive(9, 8, 7, 6);
 	Joystick stick = new Joystick(0);
 	final String defaultAuto = "Default";
 	final String customAuto = "My Auto";
@@ -40,6 +41,10 @@ public class Robot extends SampleRobot {
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
 		SmartDashboard.putData("Auto modes", chooser);
+		myRobot.setInvertedMotor(MotorType.kFrontLeft, true);
+		myRobot.setInvertedMotor(MotorType.kFrontRight, true);
+		myRobot.setInvertedMotor(MotorType.kRearLeft, true);
+		myRobot.setInvertedMotor(MotorType.kRearRight, true);
 	}
 
 	/**
