@@ -41,6 +41,7 @@ public class DriveWithJoystickComand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	// Robot.driveTrain.arcadeDriveForwardOnly(Robot.oi.getJoystick());
     	Robot.driveTrain.arcadeDrive(Robot.oi.getJoystick());
     }
 

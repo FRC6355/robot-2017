@@ -36,6 +36,7 @@ public class StopFlywheelCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.shooter.stopShooter();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -49,6 +50,7 @@ public class StopFlywheelCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.shooter.stopShooter();
     }
 
     // Called when another command which requires one or more of the same

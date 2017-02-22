@@ -37,6 +37,7 @@ public class ClimbRopeCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.ropeClimber.startReel();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -50,6 +51,7 @@ public class ClimbRopeCommand extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.ropeClimber.stopHingeDown();
     }
 
     // Called when another command which requires one or more of the same

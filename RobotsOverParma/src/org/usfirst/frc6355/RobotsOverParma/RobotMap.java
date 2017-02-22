@@ -69,13 +69,13 @@ public class RobotMap {
         driveTrainRobotDrive4.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         driveTrainRobotDrive4.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
         driveTrainRobotDrive4.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
-        shooterLeftTalon = new Talon(0);
+        shooterLeftTalon = new Talon(1);
         LiveWindow.addActuator("Shooter", "LeftTalon", (Talon) shooterLeftTalon);
         
-        shooterRightTalon = new Talon(1);
+        shooterRightTalon = new Talon(2);
         LiveWindow.addActuator("Shooter", "RightTalon", (Talon) shooterRightTalon);
         
-        shooterBallStopperServo = new Servo(2);
+        shooterBallStopperServo = new Servo(0);
         LiveWindow.addActuator("Shooter", "BallStopperServo", shooterBallStopperServo);
         
         ropeClimberReelController = new Spark(3);
