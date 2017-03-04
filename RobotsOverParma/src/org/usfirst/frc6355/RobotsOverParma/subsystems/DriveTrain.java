@@ -77,6 +77,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     
     public void arcadeDrive(Joystick joy) {
     	//robotDrive4.arcadeDrive(joy);
+    	if(joy.getAxis(AxisType.kY) < -5 || joy.getAxis(AxisType.kY) >5)
+    	{
     	double xAxis = joy.getAxis(AxisType.kX);
     	if(-5 < xAxis && xAxis < 5){
     		if(!isDriveStraightMode){
@@ -85,10 +87,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     		}
     		robotDrive4.arcadeDrive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX)+ rotateToAngleRate);
     	}
+    	}
     	else{
     		robotDrive4.arcadeDrive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX));
     	}
     }
+    
     
     public void arcadeDriveForwardOnly(Joystick joy)
     {

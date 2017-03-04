@@ -111,6 +111,7 @@ public class RobotMap {
 			 * Multiple navX-model devices on a single robot are supported.
 			 ************************************************************************/
             ahrs = new AHRS(SPI.Port.kMXP); 
+            
         } catch (RuntimeException ex ) {
             DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
         }
