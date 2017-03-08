@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -77,19 +78,28 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     
     public void arcadeDrive(Joystick joy) {
     	//robotDrive4.arcadeDrive(joy);
-    	if(joy.getAxis(AxisType.kY) < -5 || joy.getAxis(AxisType.kY) >5)
+
+    	if(joy.getAxis(AxisType.kY) < -0.1 || joy.getAxis(AxisType.kY) >0.1)
     	{
-    	double xAxis = joy.getAxis(AxisType.kX);
-    	if(-5 < xAxis && xAxis < 5){
-    		if(!isDriveStraightMode){
-    			setAngleToCurrentAngle();
-    			
-    		}
-    		robotDrive4.arcadeDrive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX)+ rotateToAngleRate);
-    	}
+	    	double xAxis = joy.getAxis(AxisType.kX);
+	    	if(-0.1 < xAxis && xAxis < 0.1){
+	    		if(!isDriveStraightMode){
+	    			setAngleToCurrentAngle();
+	    		}
+	    		SmartDashboard.putNumber("Robot Drive Correction", rotateToAngleRate);
+	    		SmartDashboard.putBoolean("Robot Drive Correction Active", true);
+	    		robotDrive4.arcadeDrive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX) + rotateToAngleRate);
+	    	}
+	    	else{
+	    		SmartDashboard.putBoolean("Robot Drive Correction Active", false);
+	    		robotDrive4.arcadeDrive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX));
+	    		isDriveStraightMode = false;
+	    	}
     	}
     	else{
+    		SmartDashboard.putBoolean("Robot Drive Correction Active", false);
     		robotDrive4.arcadeDrive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX));
+    		isDriveStraightMode = false;
     	}
     }
     
@@ -102,7 +112,9 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     public void setAngleToCurrentAngle(){
     	isDriveStraightMode = true;
 		// Acquire current yaw angle, using this as the target angle.
-		turnController.setSetpoint(RobotMap.ahrs.getYaw());
+    	turnController.reset();
+		turnController.setSetpoint(RobotMap.ahrs.getAngle());
+		SmartDashboard.putNumber("Robot Drive Angle", RobotMap.ahrs.getAngle());
 		rotateToAngleRate = 0; // This value will be updated in the pidWrite() method.
 			
 		if(!turnController.isEnabled()) {
@@ -128,6 +140,12 @@ public class DriveTrain extends Subsystem implements PIDOutput {
     /* based upon navX MXP yaw angle input and PID Coefficients.    */
     public void pidWrite(double output) {
         rotateToAngleRate = output;
+        
+        if(rotateToAngleRate > 0.2){
+        	rotateToAngleRate = 0.2;
+        }else if(rotateToAngleRate<-0.2){
+        	rotateToAngleRate = -0.2;
+        }
     }
 		
 	

@@ -69,7 +69,7 @@ public class OI {
         
         startFlywheelButton = new JoystickButton(joystick, 1);
         startFlywheelButton.whileHeld(new StartFlywheelCommand());
-        stopIntakeButton = new JoystickButton(joystick, 1);
+        stopIntakeButton = new JoystickButton(joystick, 10);
         stopIntakeButton.whileHeld(new StopIntakeCommand());
         startIntakeButton = new JoystickButton(joystick, 9);
         startIntakeButton.whileHeld(new StartIntakeCommand());

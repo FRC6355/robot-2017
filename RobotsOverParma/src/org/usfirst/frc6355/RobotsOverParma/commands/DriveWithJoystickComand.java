@@ -10,7 +10,10 @@
 
 
 package org.usfirst.frc6355.RobotsOverParma.commands;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc6355.RobotsOverParma.Robot;
 
 /**
@@ -43,6 +46,8 @@ public class DriveWithJoystickComand extends Command {
     protected void execute() {
     	// Robot.driveTrain.arcadeDriveForwardOnly(Robot.oi.getJoystick());
     	Robot.driveTrain.arcadeDrive(Robot.oi.getJoystick());
+        SmartDashboard.putNumber(   "Joystick X",              Robot.oi.getJoystick().getAxis(AxisType.kX));
+        SmartDashboard.putNumber(   "Joystick Y",              Robot.oi.getJoystick().getAxis(AxisType.kY));
     }
 
     // Make this return true when this Command no longer needs to run execute()
