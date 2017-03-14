@@ -1,6 +1,8 @@
 package org.usfirst.frc6355.RobotsOverParma.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc6355.RobotsOverParma.Robot;
 import org.usfirst.frc6355.RobotsOverParma.RobotMap;
 
@@ -22,10 +24,15 @@ public class TurnToAngleCommand extends Command {
 		System.out.println("Turn command created.");
 		this.degreesToTurn = degreesToTurn;
 		this.driveMagnitude = driveMagnitude;
+		
+    	SmartDashboard.putNumber("Autonomous - Turn Degrees", degreesToTurn);
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		// Try to read the desired turn angle from smart dashboard.
+    	degreesToTurn = SmartDashboard.getNumber("Autonomous - Turn Degrees", degreesToTurn);
+		
 		startTime = Timer.getFPGATimestamp(); // seconds.
 
 		Robot.driveTrain.setAngle(this.degreesToTurn);

@@ -78,10 +78,13 @@ public class RobotMap {
         driveTrainRobotDrive4.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         driveTrainRobotDrive4.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
         driveTrainRobotDrive4.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+
+        
         shooterLeftTalon = new Talon(1);
         LiveWindow.addActuator("Shooter", "LeftTalon", (Talon) shooterLeftTalon);
         
         shooterRightTalon = new Talon(2);
+        shooterRightTalon.setInverted(true);
         LiveWindow.addActuator("Shooter", "RightTalon", (Talon) shooterRightTalon);
         
         shooterBallStopperServo = new Servo(0);
@@ -110,11 +113,11 @@ public class RobotMap {
 			 * 
 			 * Multiple navX-model devices on a single robot are supported.
 			 ************************************************************************/
-            ahrs = new AHRS(SPI.Port.kMXP); 
+            ahrs = new AHRS(SPI.Port.kMXP);
+            ahrs.reset();
             
         } catch (RuntimeException ex ) {
             DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
         }
-        
     }
 }

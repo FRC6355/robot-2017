@@ -12,6 +12,7 @@
 package org.usfirst.frc6355.RobotsOverParma.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc6355.RobotsOverParma.Robot;
 import org.usfirst.frc6355.RobotsOverParma.RobotMap;
@@ -31,13 +32,16 @@ public class AutonomousCommand extends CommandGroup {
     	this.addSequential(new DriveForwardCommand(4.0, 0.6));
     	
     	// Turn to Angle (degrees to turn, speed)
-    	this.addSequential(new TurnToAngleCommand(-120.0, 0.8), 7.0);
+    	this.addSequential(new TurnToAngleCommand(-181.0, 0.8), 7.0);
     	
     	// Drive forward (seconds, speed)
-    	this.addSequential(new DriveForwardCommand(2.0, 0.5));
+    	this.addSequential(new DriveForwardCommand(2.0, 0.6));
+
+    	// Pause (so we don't jerk the robot too much.
+    	this.addSequential(new DriveForwardCommand(0.5, 0.0));
 
     	// Drive backwards(seconds, speed)
-    	this.addSequential(new DriveForwardCommand(2.0, -0.5));
+    	this.addSequential(new DriveForwardCommand(2.0, -0.6));
 }
 
 }
