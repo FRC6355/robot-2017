@@ -108,6 +108,8 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 		SmartDashboard.putNumber("Robot Drive Correction", rotateToAngleRate);
 		SmartDashboard.putNumber("Robot Drive CorrectionCapped", rotateToAngleRateCapped);
 		SmartDashboard.putNumber("Robot Drive PID SP", this.turnController.getSetpoint());
+		SmartDashboard.putNumber("Robot Drive L Enc", RobotMap.leftDriveTrainEncoder.getDistance());
+		SmartDashboard.putNumber("Robot Drive R Enc", RobotMap.leftDriveTrainEncoder.getDistance());
 
 		if (forwardMagnitude < -0.1 || forwardMagnitude > 0.1) {
 			double xAxis = turnMagnitude;
