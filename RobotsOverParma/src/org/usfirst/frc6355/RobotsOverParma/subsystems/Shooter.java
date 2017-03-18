@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -56,6 +57,7 @@ public class Shooter extends Subsystem {
     	setSpeed(kDefaultShooterSpeed);
     }
     public void setSpeed (double speed){
+    	SmartDashboard.putNumber("Shooter Speed", speed);
     	leftTalon.set(speed);
     	rightTalon.set(speed);
     	
@@ -64,19 +66,16 @@ public class Shooter extends Subsystem {
     	//TODO create an if statement to make sure the shooter does not go above the max value
     	leftTalon.set((leftTalon.get() * 1.02));
     	rightTalon.set((rightTalon.get() * 1.02));
-    	
-    
     }
     
     public void decreaseSpeed(){
     	//TODO create an if statement to make sure the shooter does not go above the max value
     	leftTalon.set((leftTalon.get() * 0.98));
     	rightTalon.set((rightTalon.get() * 0.98));
-    	
-    
     }
     
     public void stopShooter(){
+    	SmartDashboard.putNumber("Shooter Speed", 0);
     	setSpeed(0);
     }
     

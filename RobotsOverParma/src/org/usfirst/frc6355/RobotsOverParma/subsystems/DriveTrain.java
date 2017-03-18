@@ -245,9 +245,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// Suppress small feeds, like the joystick drift.
 		if (Math.abs(value) < 0.1) {
 			returnValue = 0.0;
-		}
-
-		if (value > 0) {
+		} else if (value > 0) {
 			returnValue = Math.max(value, kDeadbandForward);
 		} else {
 			returnValue = Math.min(value, -1 * kDeadbandForward);
@@ -267,9 +265,7 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// Suppress small feeds, like the joystick drift.
 		if (Math.abs(value) < 0.1) {
 			returnValue = 0.0;
-		}
-
-		if (value > 0) {
+		} else if (value > 0) {
 			returnValue = Math.max(value, kDeadbandTurn);
 		} else {
 			returnValue = Math.min(value, -1 * kDeadbandTurn);
