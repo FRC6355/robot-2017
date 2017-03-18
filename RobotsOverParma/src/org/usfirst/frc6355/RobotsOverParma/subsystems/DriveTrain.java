@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
@@ -28,7 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class DriveTrain extends Subsystem implements PIDOutput {
+public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 	// These constants adjust the behavior of the PIDController
 	static final double kP = 0.03; // Proportional
 	static final double kI = 0.00; // Integral
@@ -65,7 +67,8 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 			// Initialize the PIDController.
 			// The AHRS (NavX board) is the PIDSource.
 			// This DriveTrain class is the PIDOutput target.
-			turnController = new PIDController(kP, kI, kD, kF, RobotMap.ahrs, this);
+			// turnController = new PIDController(kP, kI, kD, kF, RobotMap.ahrs, this);
+			turnController = new PIDController(kP, kI, kD, kF, this, this);
 			turnController.setInputRange(0.0f, 360.0f);
 			turnController.setOutputRange(-1.0, 1.0);
 			turnController.setAbsoluteTolerance(kToleranceDegrees);
@@ -167,10 +170,15 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		// Calculate the amount to turn.
 		// Use the output of the PID controller to help us "ease" into the
 		// desired angle.
-		double turnRate = -1.0 * turnMagnitude * rotateToAngleRate;
+		double turnRate = turnMagnitude * rotateToAngleRateCapped;
 
 		SmartDashboard.putNumber("Robot Drive TurnToSetpoint()", turnRate);
 
+		System.out.println("TurnToSetpoint: turnRate: " + turnRate + ", roateToAngleRateCapped: " 
+											+ rotateToAngleRateCapped + " Setpoint: " 
+											+ this.turnController.getSetpoint() 
+											+ " Angle: " + RobotMap.ahrs.getAngle());
+		
 		robotDrive4.arcadeDrive(0, handleDeadbandTurn(turnRate));
 	}
 
@@ -228,7 +236,13 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 	 */
 	public double getAngle() {
 		try {
-			return RobotMap.ahrs.getAngle() % 360.0;
+			double angle = RobotMap.ahrs.getAngle() % 360.0;
+			
+			if (angle < 0.0)
+				angle = 360.0 + angle;
+			
+			// System.out.println("NavX angle from getAngle(): " +angle);
+			return angle;
 		} catch (Exception ex) {
 			DriverStation.reportError(ex.getMessage(), true);
 			return 0.0;
@@ -289,6 +303,24 @@ public class DriveTrain extends Subsystem implements PIDOutput {
 		} else if (rotateToAngleRateCapped < -0.2) {
 			rotateToAngleRateCapped = -0.2;
 		}
+	}
+
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+		// TODO Auto-generated method stub
+		RobotMap.ahrs.setPIDSourceType(pidSource);
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		// TODO Auto-generated method stub
+		return RobotMap.ahrs.getPIDSourceType();
+	}
+
+	@Override
+	public double pidGet() {
+		// TODO Auto-generated method stub
+		return this.getAngle();
 	}
 
 }

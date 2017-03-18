@@ -25,7 +25,10 @@ public class DriveForwardCommand extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	startTime = Timer.getFPGATimestamp();	// seconds.
+    	// Reset the navx and turn assist.
+		Robot.driveTrain.Stop();
+
+		startTime = Timer.getFPGATimestamp();	// seconds.
     	System.out.println("Drive Fwd init " + startTime + " Magnitude: " + driveForwardMagnitude);
     }
 

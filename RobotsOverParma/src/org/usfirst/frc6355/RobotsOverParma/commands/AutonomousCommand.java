@@ -32,7 +32,7 @@ public class AutonomousCommand extends CommandGroup {
     	this.addSequential(new DriveForwardCommand(4.0, 0.6));
     	
     	// Turn to Angle (degrees to turn, speed)
-    	this.addSequential(new TurnToAngleCommand(-181.0, 0.8), 7.0);
+    	this.addSequential(new TurnToAngleCommand(-160.0, 0.8), 7.0);
     	
     	// Drive forward (seconds, speed)
     	this.addSequential(new DriveForwardCommand(2.0, 0.6));
@@ -42,6 +42,6 @@ public class AutonomousCommand extends CommandGroup {
 
     	// Drive backwards(seconds, speed)
     	this.addSequential(new DriveForwardCommand(2.0, -0.6));
-}
+    }
 
 }

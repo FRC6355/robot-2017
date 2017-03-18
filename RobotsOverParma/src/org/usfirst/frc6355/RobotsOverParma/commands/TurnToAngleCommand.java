@@ -30,7 +30,10 @@ public class TurnToAngleCommand extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		// Try to read the desired turn angle from smart dashboard.
+    	// Reset the navx and turn assist.
+		Robot.driveTrain.Stop();
+
+    	// Try to read the desired turn angle from smart dashboard.
     	degreesToTurn = SmartDashboard.getNumber("Autonomous - Turn Degrees", degreesToTurn);
 		
 		startTime = Timer.getFPGATimestamp(); // seconds.
@@ -38,8 +41,9 @@ public class TurnToAngleCommand extends Command {
 		Robot.driveTrain.setAngle(this.degreesToTurn);
 
 		this.degreesWhenFinished = (Robot.driveTrain.getAngle() + this.degreesToTurn) % 360;
-		System.out.println("Turn command init. Angle:" + Robot.driveTrain.getAngle() + " \r\nDegrees to Turn: " 
-				+ degreesToTurn + ". \r\nDegrees when Done: " + degreesWhenFinished);
+		System.out.println("Turn command init. Angle:" + Robot.driveTrain.getAngle() 
+								+ " \r\nDegrees to Turn: " + degreesToTurn 
+								+ ". \r\nDegrees when Done: " + degreesWhenFinished);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
