@@ -143,6 +143,34 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 			isDriveStraightMode = false;
 		}
 	}
+	
+	/*
+	 * Drives the robot forward with the specified magnitude. The
+	 * forwardMagnitude is a value between -1 and 1. 
+	 * The method will attempt to drive the robot to the specified
+	 * angle setpoint, as specified via the call to "setAngle".
+	 */
+	public void DriveAndTurnToSetpoint(double forwardMagnitude) {
+		SmartDashboard.putNumber("AHRS Angle", getAngle());
+		SmartDashboard.putNumber("Robot Drive Correction", rotateToAngleRate);
+		SmartDashboard.putNumber("Robot Drive CorrectionCapped", rotateToAngleRateCapped);
+		SmartDashboard.putNumber("Robot Drive PID SP", this.turnController.getSetpoint());
+		SmartDashboard.putNumber("Robot Drive L Enc", RobotMap.leftDriveTrainEncoder.getDistance());
+		SmartDashboard.putNumber("Robot Drive R Enc", RobotMap.leftDriveTrainEncoder.getDistance());
+
+		// The turnController should already be active. If not, make it track to current angle.
+		if (!turnController.isEnabled()){
+			setAngleToCurrentAngle();
+		}
+		SmartDashboard.putBoolean("Robot Drive Correction Active", true);
+
+		// When driving with turn correction, don't adjust for deadband.
+		// Otherwise the robot will waddle as the turn correction
+		// bounces between the min/max deadband.
+		// As long as the forward magnitude is sufficient, then the
+		// deadband on the turn is unnecessary.
+		robotDrive4.arcadeDrive(handleDeadbandForward(forwardMagnitude), rotateToAngleRateCapped);
+	}	
 
 	/*
 	 * Stops the drive motion and disables the turn correction.
@@ -249,6 +277,24 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 			DriverStation.reportError(ex.getMessage(), true);
 			return 0.0;
 		}
+	}
+	
+	public double getLeftWheelDistance(){
+		return RobotMap.leftDriveTrainEncoder.getDistance();
+	}
+	
+	public double getRightWheelDistance(){
+		return RobotMap.rightDriveTrainEncoder.getDistance();
+	}
+	
+	public double getWheelDistanceAverage(){
+		// This is only meaningful for smaller values of distance, and if it's been reset recently.
+		return (getLeftWheelDistance() + getRightWheelDistance()) / 2.0;
+	}
+	
+	public void resetDistanceMeasures(){
+		RobotMap.leftDriveTrainEncoder.reset();
+		RobotMap.rightDriveTrainEncoder.reset();
 	}
 
 	/*

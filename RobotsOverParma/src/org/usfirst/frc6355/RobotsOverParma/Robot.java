@@ -32,13 +32,13 @@ import org.usfirst.frc6355.RobotsOverParma.subsystems.*;
 public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
-	NetworkTable table;
 
 	public static OI oi;
 	public static DriveTrain driveTrain;
 	public static Shooter shooter;
 	public static RopeClimber ropeClimber;
 	public static Intake intake;
+	public static Vision vision;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -46,12 +46,14 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		RobotMap.init();
-		table = NetworkTable.getTable("vision/gear");
 		System.out.println("Robot Init");
 		driveTrain = new DriveTrain();
 		shooter = new Shooter();
 		ropeClimber = new RopeClimber();
 		intake = new Intake();
+		vision = new Vision();
+		
+		driveTrain.resetDistanceMeasures(); // Reset encoders to 0.
 
 		// OI must be constructed after subsystems. If the OI creates Commands
 		// (which it very likely will), subsystems are not guaranteed to be
@@ -83,6 +85,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
+		driveTrain.resetDistanceMeasures(); // Reset encoders to 0.
+
 		// schedule the autonomous command (example)
 		// RobotMap.ahrs.reset();
 		if (autonomousCommand != null)
@@ -97,8 +101,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-
 		RobotMap.ahrs.reset();
+		driveTrain.resetDistanceMeasures(); // Reset encoders to 0.
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -113,12 +117,6 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		// double[] defaultValue = new double[0];
-		// double[] widths = table.getNumberArray("width", defaultValue);
-		// for (double width : widths) {
-		// System.out.print(width + " ");
-		// }
-		// System.out.println();
 	}
 
 	/**

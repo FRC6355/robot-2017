@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Servo;
@@ -59,8 +60,16 @@ public class RobotMap {
     public static Encoder leftDriveTrainEncoder;
     public static Encoder rightDriveTrainEncoder;
 
+    public static Relay visionRingLightRelay;
+    
 
     public static void init() {
+    	
+    	//visionRingLightRelay = new Relay(0, Relay.Direction.kForward);
+    	//visionRingLightRelay.set(Relay.Value.kOn);
+    	//visionRingLightRelay.set(Relay.Value.kOff);
+    	
+    	
         driveTrainLeftFrontSpeedControler = new Victor(9);
         LiveWindow.addActuator("DriveTrain", "LeftFrontSpeedControler", (Victor) driveTrainLeftFrontSpeedControler);
         

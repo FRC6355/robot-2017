@@ -9,17 +9,17 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  *
  */
-public class DriveForwardCommand extends Command {
+public class DriveForwardInchesCommand extends Command {
 	
-	private double startTime = 0.0;
-	private double driveForwardSeconds = 0.0;
+	private double startDistance = 0.0;
+	private double driveForwardInches = 0.0;
 	private double driveForwardMagnitude = 0.0;
 	
 	
-    public DriveForwardCommand(double secondsToDriveForward, double forwardMagnitude) {
+    public DriveForwardInchesCommand(double inchesToDriveForward, double forwardMagnitude) {
     	requires(Robot.driveTrain);
-    	System.out.println("Drive Fwd created.");
-    	driveForwardSeconds = secondsToDriveForward;
+    	System.out.println("Drive Fwd Inches created.");
+    	driveForwardInches = inchesToDriveForward;
     	driveForwardMagnitude = forwardMagnitude;
     }
 
@@ -28,8 +28,9 @@ public class DriveForwardCommand extends Command {
     	// Reset the navx and turn assist.
 		Robot.driveTrain.Stop();
 
-		startTime = Timer.getFPGATimestamp();	// seconds.
-    	System.out.println("Drive Fwd init " + startTime + " Magnitude: " + driveForwardMagnitude);
+		startDistance = Robot.driveTrain.getWheelDistanceAverage();
+		
+    	System.out.println("Drive Fwd init: From " + startDistance + " Magnitude: " + driveForwardMagnitude);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -39,13 +40,14 @@ public class DriveForwardCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	double currentTime = Timer.getFPGATimestamp();
+    	double currentDistance = Robot.driveTrain.getWheelDistanceAverage();
+    	double distanceDelta = Math.abs(currentDistance - startDistance);
     	
-    	if (startTime + driveForwardSeconds < currentTime){
-        	System.out.println("Drive Fwd finished. StartTime: " 
-        									+ startTime + " DriveSeconds: "
-        									+ driveForwardSeconds + " CurrentTime: "
-        									+ currentTime);
+    	if (distanceDelta > Math.abs(driveForwardInches)){
+        	System.out.println("Drive Fwd Inches finished. StartDistance: " 
+        									+ startDistance + " DriveInches: "
+        									+ driveForwardInches + " CurrentDistance: "
+        									+ currentDistance);
     		return true;
     	}    	
     	
