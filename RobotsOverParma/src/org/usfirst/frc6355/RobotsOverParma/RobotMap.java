@@ -65,10 +65,7 @@ public class RobotMap {
 
     public static void init() {
     	
-    	//visionRingLightRelay = new Relay(0, Relay.Direction.kForward);
-    	//visionRingLightRelay.set(Relay.Value.kOn);
-    	//visionRingLightRelay.set(Relay.Value.kOff);
-    	
+    	visionRingLightRelay = new Relay(0, Relay.Direction.kForward);
     	
         driveTrainLeftFrontSpeedControler = new Victor(9);
         LiveWindow.addActuator("DriveTrain", "LeftFrontSpeedControler", (Victor) driveTrainLeftFrontSpeedControler);
