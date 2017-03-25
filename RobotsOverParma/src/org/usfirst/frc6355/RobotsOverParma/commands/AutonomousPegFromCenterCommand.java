@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * 
  */
-public class AutonomousCommand extends CommandGroup {
+public class AutonomousPegFromCenterCommand extends CommandGroup {
 
 	public static final double kDriveFast = 0.8;
 	public static final double kDriveMed = 0.6;
@@ -32,17 +32,10 @@ public class AutonomousCommand extends CommandGroup {
 
 	public static final double kInchesPerFoot = 12.0;
 	public static final double kMaxInchesToPeg = 5.0 * kInchesPerFoot; 		// 5 feet;
+		
 	
-	
-	
-    public AutonomousCommand() {
+    public AutonomousPegFromCenterCommand() {
     	System.out.println("Autonomous command created.");
-    	
-    	// Drive forward (inches, speed)
-    	this.addSequential(new DriveForwardInchesCommand(5.0 * kInchesPerFoot, kDriveMed));
-    	
-    	// Turn to Angle (degrees to turn, speed)
-    	this.addSequential(new TurnToAngleCommand(-110.0, kDriveFast), 7.0);
     	
     	// Turn on the ring light
     	this.addSequential(new TurnVisionLightOnOffCommand(true));
@@ -58,7 +51,7 @@ public class AutonomousCommand extends CommandGroup {
     	this.addSequential(new DriveForwardSecondsCommand(0.5, kDriveStopped));
 
     	// Drive backwards(inches, speed)
-    	this.addSequential(new DriveForwardInchesCommand(3.0 * kInchesPerFoot, -kDriveMed));
+    	this.addSequential(new DriveForwardInchesCommand(3.0 * kInchesPerFoot, kDriveMed));
     }
 
 }

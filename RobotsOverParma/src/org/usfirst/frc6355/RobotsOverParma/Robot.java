@@ -12,9 +12,11 @@ package org.usfirst.frc6355.RobotsOverParma;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.cscore.UsbCamera;
@@ -31,8 +33,9 @@ import org.usfirst.frc6355.RobotsOverParma.subsystems.*;
  */
 public class Robot extends IterativeRobot {
 
+	SendableChooser<Command> autonomousChooser;
 	Command autonomousCommand;
-
+	
 	public static OI oi;
 	public static DriveTrain driveTrain;
 	public static Shooter shooter;
@@ -61,9 +64,20 @@ public class Robot extends IterativeRobot {
 		// pointers. Bad news. Don't move it.
 		oi = new OI();
 
-		// instantiate the command used for the autonomous period
-		autonomousCommand = new AutonomousCommand();
+		// instantiate the commands used for the autonomous period
+		Command autonomousDoNothing = new CommandGroup("Do Nothing");
+		Command autonomousCommandFromLeft = new AutonomousPegFromLeftCommand();
+		Command autonomousCommandFromCenter = new AutonomousPegFromCenterCommand();
+		Command autonomousCommandFromRight = new AutonomousPegFromRightCommand();
+		Command autonomousCommandTurnInPlace = new AutonomousTurnInPlaceCommand(90.0);
+		autonomousChooser = new SendableChooser<Command>();
+		autonomousChooser.addDefault("Nothing", autonomousDoNothing);
+		autonomousChooser.addObject("From Left", autonomousCommandFromLeft);
+		autonomousChooser.addObject("From Center", autonomousCommandFromCenter);
+		autonomousChooser.addObject("From Right", autonomousCommandFromRight);
+		autonomousChooser.addObject("Turn in Place", autonomousCommandTurnInPlace);
 
+		// Start camera feeds.
 		try {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setResolution(640, 480);
@@ -86,9 +100,15 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		driveTrain.resetDistanceMeasures(); // Reset encoders to 0.
-
+		
 		// schedule the autonomous command (example)
 		// RobotMap.ahrs.reset();
+
+		if (autonomousCommand != null)
+			autonomousCommand.cancel();
+		
+		// Get the command that's selected in the chooser.
+		autonomousCommand = autonomousChooser.getSelected();
 		if (autonomousCommand != null)
 			autonomousCommand.start();
 	}
@@ -108,8 +128,10 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (autonomousCommand != null)
+		if (autonomousCommand != null) {
 			autonomousCommand.cancel();
+			autonomousCommand = null;
+		}
 	}
 
 	/**

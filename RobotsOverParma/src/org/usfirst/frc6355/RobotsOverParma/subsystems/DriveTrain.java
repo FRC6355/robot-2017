@@ -33,14 +33,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 	// These constants adjust the behavior of the PIDController
 	static final double kP = 0.03; // Proportional
-	static final double kI = 0.00; // Integral
-	static final double kD = 0.00; // Derivative
+	static final double kI = 0.01; // Integral
+	static final double kD = 0.01; // Derivative
 	static final double kF = 0.00; // Feed forward
 	static final double kToleranceDegrees = 2.0f;
 
 	// Anything lower than this won't turn the wheels.
 	static final double kDeadbandForward = 0.40;
-	static final double kDeadbandTurn = 0.45;
+	static final double kDeadbandTurn = 0.40;
 
 	// The rate of adjustment from the turn controller.
 	double rotateToAngleRate = 0.00;
@@ -94,7 +94,8 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 	 * This is the primary command for single joystick driving.
 	 */
 	public void arcadeDrive(Joystick joy) {
-		Drive(joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX));
+		// Invert the Y axis because "forward" on the joystick is a negative Y. SMH.
+		Drive( -1.0 * joy.getAxis(AxisType.kY), joy.getAxis(AxisType.kX));
 	}
 
 	/*
@@ -160,7 +161,7 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 
 		// The turnController should already be active. If not, make it track to current angle.
 		if (!turnController.isEnabled()){
-			setAngleToCurrentAngle();
+			setAngleToCurrentAngle();			
 		}
 		SmartDashboard.putBoolean("Robot Drive Correction Active", true);
 
@@ -183,7 +184,7 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 		rotateToAngleRate = 0;
 		rotateToAngleRateCapped = 0;
 
-		turnController.disable();
+		// turnController.disable();
 		// RobotMap.ahrs.reset();
 	}
 
@@ -196,11 +197,18 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 		SmartDashboard.putNumber("Robot Drive Correction", rotateToAngleRate);
 		SmartDashboard.putNumber("Robot Drive CorrectionCapped", rotateToAngleRateCapped);
 		SmartDashboard.putNumber("Robot Drive PID SP", this.turnController.getSetpoint());
-
+		
+		double cappedTurnRate = 0.0;
+		if (rotateToAngleRate > 0.0){
+			cappedTurnRate = Math.max(0.8, rotateToAngleRate);
+		} else {
+			cappedTurnRate = Math.min(-0.8, rotateToAngleRate);			
+		}
+		
 		// Calculate the amount to turn.
 		// Use the output of the PID controller to help us "ease" into the
 		// desired angle.
-		double turnRate = turnMagnitude * rotateToAngleRateCapped;
+		double turnRate = turnMagnitude * cappedTurnRate;
 
 		SmartDashboard.putNumber("Robot Drive TurnToSetpoint()", turnRate);
 
@@ -259,6 +267,10 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 		if (!turnController.isEnabled()) {
 			turnController.enable();
 		}
+	}
+
+	public double getTargetAngle() {
+		return turnController.getSetpoint();
 	}
 
 	/*
