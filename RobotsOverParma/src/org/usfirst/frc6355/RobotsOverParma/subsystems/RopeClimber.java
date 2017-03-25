@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class RopeClimber extends Subsystem {
-	public static final double kDefaultHinge = 0.3;
-	public static final double kDefaultReel = 0.3;
+	public static final double kDefaultHinge = 0.5;
+	public static final double kDefaultReel = 0.5;
 	public static final double kStop = 0;
 
 
