@@ -66,15 +66,21 @@ public class Robot extends IterativeRobot {
 
 		// instantiate the commands used for the autonomous period
 		Command autonomousDoNothing = new CommandGroup("Do Nothing");
-		Command autonomousCommandFromLeft = new AutonomousPegFromLeftCommand();
-		Command autonomousCommandFromCenter = new AutonomousPegFromCenterCommand();
-		Command autonomousCommandFromRight = new AutonomousPegFromRightCommand();
+		Command autonomousCommandFromLeftVision = new AutonomousPegFromLeftCommand(true);
+		Command autonomousCommandFromCenterVision = new AutonomousPegFromCenterCommand(true);
+		Command autonomousCommandFromRightVision = new AutonomousPegFromRightCommand(true);
+		Command autonomousCommandFromLeftDeadReckoning = new AutonomousPegFromLeftCommand(false);
+		Command autonomousCommandFromCenterDeadReckoning = new AutonomousPegFromCenterCommand(false);
+		Command autonomousCommandFromRightDeadReckoning = new AutonomousPegFromRightCommand(false);
 		Command autonomousCommandTurnInPlace = new AutonomousTurnInPlaceCommand(90.0);
 		autonomousChooser = new SendableChooser<Command>();
 		autonomousChooser.addDefault("Nothing", autonomousDoNothing);
-		autonomousChooser.addObject("From Left", autonomousCommandFromLeft);
-		autonomousChooser.addObject("From Center", autonomousCommandFromCenter);
-		autonomousChooser.addObject("From Right", autonomousCommandFromRight);
+		autonomousChooser.addObject("From Left (Vision)", autonomousCommandFromLeftVision);
+		autonomousChooser.addObject("From Center (Vision)", autonomousCommandFromCenterVision);
+		autonomousChooser.addObject("From Right (Vision)", autonomousCommandFromRightVision);
+		autonomousChooser.addObject("From Left (Dead Reckoning)", autonomousCommandFromLeftDeadReckoning);
+		autonomousChooser.addObject("From Center (Dead Reckoning)", autonomousCommandFromCenterDeadReckoning);
+		autonomousChooser.addObject("From Right (Dead Reckoning)", autonomousCommandFromRightDeadReckoning);
 		autonomousChooser.addObject("Turn in Place", autonomousCommandTurnInPlace);
 
 		// Start camera feeds.

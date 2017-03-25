@@ -34,24 +34,29 @@ public class AutonomousPegFromCenterCommand extends CommandGroup {
 	public static final double kMaxInchesToPeg = 5.0 * kInchesPerFoot; 		// 5 feet;
 		
 	
-    public AutonomousPegFromCenterCommand() {
+    public AutonomousPegFromCenterCommand(boolean useVision) {
     	System.out.println("Autonomous command created.");
     	
-    	// Turn on the ring light
-    	this.addSequential(new TurnVisionLightOnOffCommand(true));
+    	if (useVision) {
+        	// Turn on the ring light
+        	this.addSequential(new TurnVisionLightOnOffCommand(true));
 
-    	// Drive forward (inches, speed)
-    	this.addSequential(new DriveToPegWithVisionCommand(kDriveMed, kMaxInchesToPeg));
+        	// Drive forward (inches, speed)
+        	this.addSequential(new DriveToPegWithVisionCommand(kDriveMed, kMaxInchesToPeg));
 
-    	// Turn off the ring light
-    	this.addSequential(new TurnVisionLightOnOffCommand(false));
+        	// Turn off the ring light
+        	this.addSequential(new TurnVisionLightOnOffCommand(false));
+    	} else {
+        	// Drive Forward(inches, speed)
+        	this.addSequential(new DriveForwardInchesCommand(3.0 * kInchesPerFoot, kDriveMed));
+    	}
 
     	// Pause (so we don't jerk the robot too much.
     	// (seconds, magnitude)
     	this.addSequential(new DriveForwardSecondsCommand(0.5, kDriveStopped));
 
     	// Drive backwards(inches, speed)
-    	this.addSequential(new DriveForwardInchesCommand(3.0 * kInchesPerFoot, kDriveMed));
+    	this.addSequential(new DriveForwardInchesCommand(-2.0 * kInchesPerFoot, kDriveMed));
     }
 
 }
