@@ -27,7 +27,7 @@ public class TurnToAngleCommand extends Command {
 		this.degreesToTurn = degreesToTurn;
 		this.driveMagnitude = driveMagnitude;
 		
-    	SmartDashboard.putNumber("Autonomous - Turn Degrees", degreesToTurn);
+    	// SmartDashboard.putNumber("Autonomous - Turn Degrees", degreesToTurn);
 	}
 
 	// Called just before this Command runs the first time
@@ -36,10 +36,11 @@ public class TurnToAngleCommand extends Command {
 		Robot.driveTrain.Stop();
 
     	// Try to read the desired turn angle from smart dashboard.
-    	degreesToTurn = SmartDashboard.getNumber("Autonomous - Turn Degrees", degreesToTurn);
+    	// degreesToTurn = SmartDashboard.getNumber("Autonomous - Turn Degrees", degreesToTurn);
 		
 		startTime = Timer.getFPGATimestamp(); // seconds.
 
+		
 		Robot.driveTrain.setAngle(this.degreesToTurn);
 
 		this.degreesWhenFinished = (Robot.driveTrain.getAngle() + this.degreesToTurn) % 360;
@@ -60,7 +61,7 @@ public class TurnToAngleCommand extends Command {
 		System.out.println("Turn Diff: " + diff);
 		
 		
-		if (diff < 5.0){
+		if (diff < 10.0){
 			iterationsAtTarget++;
 			Robot.driveTrain.Stop();
 			return;
@@ -105,7 +106,7 @@ public class TurnToAngleCommand extends Command {
 
 		double degreesFromTargetAngle = degreesWhenFinished - Robot.driveTrain.getAngle();
 
-		if (Math.abs(degreesFromTargetAngle) < 5.0) {
+		if (Math.abs(degreesFromTargetAngle) < 10.0) {
 			System.out.println("Turn command finished. Current Degrees: " + Robot.driveTrain.getAngle() + " Off from Target: "
 					+ degreesFromTargetAngle);
 			return true;

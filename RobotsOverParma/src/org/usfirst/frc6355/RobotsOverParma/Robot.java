@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.cscore.UsbCamera;
@@ -82,6 +83,7 @@ public class Robot extends IterativeRobot {
 		autonomousChooser.addObject("From Center (Dead Reckoning)", autonomousCommandFromCenterDeadReckoning);
 		autonomousChooser.addObject("From Right (Dead Reckoning)", autonomousCommandFromRightDeadReckoning);
 		autonomousChooser.addObject("Turn in Place", autonomousCommandTurnInPlace);
+		SmartDashboard.putData("Autonomous mode chooser", autonomousChooser);
 
 		// Start camera feeds.
 		try {

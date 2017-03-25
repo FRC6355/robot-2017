@@ -201,7 +201,7 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 		double cappedTurnRate = 0.0;
 		if (rotateToAngleRate > 0.0){
 			cappedTurnRate = Math.max(0.8, rotateToAngleRate);
-		} else {
+		} else if (rotateToAngleRate < 0.0) {
 			cappedTurnRate = Math.min(-0.8, rotateToAngleRate);			
 		}
 		

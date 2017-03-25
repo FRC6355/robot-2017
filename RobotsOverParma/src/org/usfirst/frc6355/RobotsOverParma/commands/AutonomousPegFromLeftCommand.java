@@ -38,7 +38,7 @@ public class AutonomousPegFromLeftCommand extends CommandGroup {
     	System.out.println("Autonomous command created.");
     	
     	// Drive forward (inches, speed)
-    	this.addSequential(new DriveForwardInchesCommand(5.0 * kInchesPerFoot, kDriveMed));
+    	this.addSequential(new DriveForwardInchesCommand(15.0 * kInchesPerFoot, kDriveMed));
     	
     	// Turn to Angle (degrees to turn, speed)
     	this.addSequential(new TurnToAngleCommand(120.0, kDriveSlow), 7.0);
@@ -54,15 +54,15 @@ public class AutonomousPegFromLeftCommand extends CommandGroup {
         	this.addSequential(new TurnVisionLightOnOffCommand(false));
     	} else {
         	// Drive forward(inches, speed)
-        	this.addSequential(new DriveForwardInchesCommand(3.0 * kInchesPerFoot, kDriveMed));
+        	this.addSequential(new DriveForwardInchesCommand(2.0 * kInchesPerFoot, kDriveMed));
     	}
 
     	// Pause (so we don't jerk the robot too much.
     	// (seconds, magnitude)
-    	this.addSequential(new DriveForwardSecondsCommand(0.5, kDriveStopped));
+    	this.addSequential(new DriveForwardSecondsCommand(3.0, kDriveStopped));
 
     	// Drive backwards(inches, speed)
-    	this.addSequential(new DriveForwardInchesCommand(-3.0 * kInchesPerFoot, kDriveMed));
+    	this.addSequential(new DriveForwardInchesCommand(1.0 * kInchesPerFoot, -kDriveMed));
     }
 
 }

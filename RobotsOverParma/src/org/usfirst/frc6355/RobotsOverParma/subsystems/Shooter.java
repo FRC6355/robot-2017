@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Shooter extends Subsystem {
-	public static final double kDefaultShooterSpeed = .75;
+	public static final double kDefaultShooterSpeed = .9;
 	public static final double kStop = 0;
 	
 

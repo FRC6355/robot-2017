@@ -84,8 +84,8 @@ public class RobotMap {
         
         leftDriveTrainEncoder = new Encoder(0, 1, true, EncodingType.k4X);
         rightDriveTrainEncoder = new Encoder(2, 3, true, EncodingType.k4X);
-        leftDriveTrainEncoder.setDistancePerPulse(0.009239823442864);		// 0.009239823442864 == factor for 6" wheels	
-        rightDriveTrainEncoder.setDistancePerPulse(0.009239823442864);		// 0.009239823442864 == factor for 6" wheels
+        leftDriveTrainEncoder.setDistancePerPulse(0.0203276115743008);		// 0.009239823442864 == factor for 6" wheels	
+        rightDriveTrainEncoder.setDistancePerPulse(0.0203276115743008);		// 0.009239823442864 == factor for 6" wheels
         //leftDriveTrainEncoder.setDistancePerPulse(0.009239823442864);		// 0.0123197642824912 == factor for 8" wheels	
         //rightDriveTrainEncoder.setDistancePerPulse(0.009239823442864);		// 0.0123197642824912 == factor for 8" wheels
         LiveWindow.addSensor("DriveTrain", "leftDriveTrainEncoder", leftDriveTrainEncoder);
