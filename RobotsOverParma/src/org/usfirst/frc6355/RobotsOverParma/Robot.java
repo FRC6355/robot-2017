@@ -74,6 +74,7 @@ public class Robot extends IterativeRobot {
 		Command autonomousCommandFromCenterDeadReckoning = new AutonomousPegFromCenterCommand(false);
 		Command autonomousCommandFromRightDeadReckoning = new AutonomousPegFromRightCommand(false);
 		Command autonomousCommandTurnInPlace = new AutonomousTurnInPlaceCommand(90.0);
+		Command autonomousCommandTurnInPlaceRev = new AutonomousTurnInPlaceCommand(-90.0);
 		autonomousChooser = new SendableChooser<Command>();
 		autonomousChooser.addDefault("Nothing", autonomousDoNothing);
 		autonomousChooser.addObject("From Left (Vision)", autonomousCommandFromLeftVision);
@@ -83,6 +84,7 @@ public class Robot extends IterativeRobot {
 		autonomousChooser.addObject("From Center (Dead Reckoning)", autonomousCommandFromCenterDeadReckoning);
 		autonomousChooser.addObject("From Right (Dead Reckoning)", autonomousCommandFromRightDeadReckoning);
 		autonomousChooser.addObject("Turn in Place", autonomousCommandTurnInPlace);
+		autonomousChooser.addObject("Turn in Place Rev", autonomousCommandTurnInPlaceRev);
 		SmartDashboard.putData("Autonomous mode chooser", autonomousChooser);
 
 		// Start camera feeds.

@@ -118,18 +118,20 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 				if (!isDriveStraightMode) {
 					setAngleToCurrentAngle();
 				}
+				
 				SmartDashboard.putBoolean("Robot Drive Correction Active", true);
 				// robotDrive4.arcadeDrive(handleDeadbandForward(forwardMagnitude),
 				// handleDeadbandTurn(turnMagnitude + rotateToAngleRateCapped));
 
-				// When driving with straight turn correction, don't adjust for
-				// deadband.
+				// When driving with straight turn correction, don't adjust for deadband.
 				// Otherwise the robot will waddle as the turn correction
 				// bounces between the min/max deadband.
 				// As long as the forward magnitude is sufficient, then the
 				// deadband on the turn is unnecessary.
-				robotDrive4.arcadeDrive(handleDeadbandForward(forwardMagnitude),
-						(turnMagnitude + rotateToAngleRateCapped));
+				robotDrive4.arcadeDrive(
+								handleDeadbandForward(forwardMagnitude),
+								(turnMagnitude + rotateToAngleRateCapped)
+							);
 			} else {
 				// Mixed forward and turn inputs. Not just a turn, but not just
 				// straight.
@@ -163,6 +165,7 @@ public class DriveTrain extends Subsystem implements PIDOutput, PIDSource {
 		if (!turnController.isEnabled()){
 			setAngleToCurrentAngle();			
 		}
+
 		SmartDashboard.putBoolean("Robot Drive Correction Active", true);
 
 		// When driving with turn correction, don't adjust for deadband.

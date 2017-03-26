@@ -59,16 +59,40 @@ public class Vision extends Subsystem {
 	}
 	
 	public boolean getIsVisionInRange(){
-		double x = table.getNumber(kNetworkTableValueGear_X, -1000);
+		if (null == table){
+			table = NetworkTable.getTable(kNetworkTableNameGear);
+		}
 		
-		if (x == -1000){
+		if (null == table){
+			System.out.println("Vision not active. Network table not found.");
 			return false;
+		}
+		
+		double y = table.getNumber(kNetworkTableValueGear_Y, -1000);
+		
+		if (y == -1000 || y < 0.0){
+			System.out.println("Vision not active. Camera cannot see target.");
+			return false;
+		}
+		
+		if (y < kMinYValue || y > kMaxYValue) {
+			System.out.println("Vision not active. Values out of range.");
+			return false;
+		}
+		
+		if (y < 24.0) {
+			System.out.println("Vision not active. Too close.");
+			return false; // Stop using vision when less than 2' away.
 		}
 		
 		return true;
 	}
 	
 	public double getVisionXOffset(){
+		if (!this.getIsVisionInRange()){
+			return 0.0;
+		}
+
 		double x = table.getNumber(kNetworkTableValueGear_X, 0.0);
 		
 		if (x < kMinXValue || x > kMaxXValue)
@@ -78,6 +102,10 @@ public class Vision extends Subsystem {
 	}
 
 	public double getVisionYOffset(){
+		if (!this.getIsVisionInRange()){
+			return 0.0;
+		}
+
 		double y = table.getNumber(kNetworkTableValueGear_Y, 0.0);
 		
 		if (y < kMinYValue || y > kMaxYValue)
@@ -87,8 +115,12 @@ public class Vision extends Subsystem {
 	}
 
 	public double getVisionAngleOffset(){
+		if (!this.getIsVisionInRange()){
+			return 0.0;
+		}
+		
 		double angle = table.getNumber(kNetworkTableValueGear_Angle, 0.0);
-		return angle % 360.0;
+		return (angle % 360.0) / 4.0;
 	}
 
 }

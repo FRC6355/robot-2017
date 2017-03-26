@@ -19,7 +19,7 @@ public class DriveToPegWithVisionCommand extends Command {
 	private double initialDistanceValueRight = 0.0;
 	
 	private double lastVisionSnapshotTime = 0.0;		// When was the last time we checked our heading.
-	private double secondsBetweenVisionSnapshots = 0.5;	// Check the vision 2x per second.
+	private double secondsBetweenVisionSnapshots = 0.1;	// Check the vision 2x per second.
 
 	private double initialVisionDistanceValue = -1.0; 	// How far away does vision think we are.
 	private double initialEncoderDistanceValue = -1.0; 	// What was the initial encoder reading.
@@ -52,35 +52,57 @@ public class DriveToPegWithVisionCommand extends Command {
 
     	// Check if we can / should apply vision correction to the driving.
     	if (Robot.vision.getIsVisionInRange()){
+        	System.out.println("Vision: VisionAngle " + Robot.vision.getVisionAngleOffset() 
+									+ " NavX Angle: " + Robot.driveTrain.getAngle()
+									+ " DriveSP: " + Robot.driveTrain.getTargetAngle()
+        							+ " Y: " + Robot.vision.getVisionYOffset()
+        							+ " lVST: " + lastVisionSnapshotTime
+        							+ " moved: " + this.getDistanceMoved()
+        							+ " distSP: " + visionDistanceSetpoint
+        			);
+
         	double currentTime = Timer.getFPGATimestamp();
-        	
+
         	// Check if "secondsBetweenVisionSnapshots" has passed since the last snapshot. 
         	if (lastVisionSnapshotTime == 0.0 || currentTime > lastVisionSnapshotTime + secondsBetweenVisionSnapshots) {
         		// Snapshot the vision again and adjust the target angle.
         		double visionAngle = Robot.vision.getVisionAngleOffset();
-        		Robot.driveTrain.setAngle(visionAngle * -1.0);
+        		Robot.driveTrain.setAngle(visionAngle); // * -1.0);
         		
-        		if (initialVisionDistanceValue == -1.0) {
-        			// This is the first time vision is active. Capture the current "X";
-        			initialVisionDistanceValue = Robot.vision.getVisionXOffset();
+            	System.out.println("UPDATING SNAPSHOT: Vision: Angle " + Robot.vision.getVisionAngleOffset() 
+            						+ " Y: " + Robot.vision.getVisionYOffset());
+
+            	if (initialVisionDistanceValue <= -1.0) {
+        			// This is the first time vision is active. Capture the current "Y";
+        			initialVisionDistanceValue = Robot.vision.getVisionYOffset();
         			initialEncoderDistanceValue = this.getDistanceMoved();
+
+        			visionDistanceSetpoint = this.getDistanceMoved() + initialVisionDistanceValue;
         		} else {
             		// Calculate the distance factor.
         			// This is used later, when we are too close for vision to work.
-        			double deltaVision = (initialVisionDistanceValue - Robot.vision.getVisionXOffset());
-        			double deltaEncoder = (initialEncoderDistanceValue - this.getDistanceMoved());
+        			double deltaVision = Math.max(1.0, initialVisionDistanceValue - Robot.vision.getVisionYOffset());
+        			double deltaEncoder = Math.max(1.0, (this.getDistanceMoved() - initialEncoderDistanceValue));
         			double visionDistanceFactor = deltaEncoder / deltaVision;
         			
+        			
         			// Calculate how many more inches to move based on vision.
-        			double visionDerivedTargetInches = Robot.vision.getVisionXOffset() * visionDistanceFactor;
+        			double visionDerivedTargetInches = Robot.vision.getVisionYOffset() * visionDistanceFactor;
         			
         			visionDistanceSetpoint = this.getDistanceMoved() + visionDerivedTargetInches;
+
+        			System.out.println("deltaVison: " + deltaVision + " deltaEncoder: " + deltaEncoder 
+        							+ " visionDistanceFactor: " + visionDistanceFactor + " visionDistanceSetpoint: " 
+        							+ visionDistanceSetpoint);
         		}
+        		
+        		lastVisionSnapshotTime = currentTime;
         	}
 
         	Robot.driveTrain.DriveAndTurnToSetpoint(driveForwardMagnitude);
     		
     	} else {
+    		System.out.println("Vision no longer active.");
     		// Vision no longer in range. Drive straight the remaining distance.
         	Robot.driveTrain.Drive(driveForwardMagnitude, 0);
     	}
@@ -90,13 +112,16 @@ public class DriveToPegWithVisionCommand extends Command {
     protected boolean isFinished() {
     	// Check if we have moved far enough.
     	double avgDistance = getDistanceMoved();
+    	
+    	System.out.println("DTPV: IsFinished: avgDistance: " + avgDistance + " visionDistanceSetpoint: " + visionDistanceSetpoint);
+    	
     	if (avgDistance >= this.maxInchesToDrive) {
     		// We reached the max we can drive in this mode.
         	System.out.println("Drive To Peg wtih Vision finished. Reached max distance: " + maxInchesToDrive);
     		return true;
     	}
     	
-    	if (avgDistance >= visionDistanceSetpoint) {
+    	if (avgDistance > visionDistanceSetpoint) {
     		// We drove as far as the vision algorithm said we should.
         	System.out.println("Drive To Peg wtih Vision finished. Reached target distance: " + visionDistanceSetpoint);
     		return true;

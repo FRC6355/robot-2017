@@ -35,7 +35,7 @@ public class AutonomousPegFromCenterCommand extends CommandGroup {
 		
 	
     public AutonomousPegFromCenterCommand(boolean useVision) {
-    	System.out.println("Autonomous command created.");
+    	System.out.println("Autonomous Peg from Center command created.");
     	
     	if (useVision) {
         	// Turn on the ring light

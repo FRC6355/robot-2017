@@ -35,7 +35,7 @@ public class AutonomousPegFromLeftCommand extends CommandGroup {
 		
 	
     public AutonomousPegFromLeftCommand(boolean useVision) {
-    	System.out.println("Autonomous command created.");
+    	System.out.println("Autonomous Peg from Left command created.");
     	
     	// Drive forward (inches, speed)
     	this.addSequential(new DriveForwardInchesCommand(15.0 * kInchesPerFoot, kDriveMed));
@@ -48,7 +48,7 @@ public class AutonomousPegFromLeftCommand extends CommandGroup {
         	this.addSequential(new TurnVisionLightOnOffCommand(true));
 
         	// Drive forward (inches, speed)
-        	this.addSequential(new DriveToPegWithVisionCommand(kDriveMed, kMaxInchesToPeg));
+        	this.addSequential(new DriveToPegWithVisionCommand(kDriveSlow, kMaxInchesToPeg));
 
         	// Turn off the ring light
         	this.addSequential(new TurnVisionLightOnOffCommand(false));
